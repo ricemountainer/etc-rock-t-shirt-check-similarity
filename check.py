@@ -18,7 +18,7 @@ model = models.resnet50(pretrained=True)
 model = model.eval()
 
 # 類似性の閾値
-THRESHOLD=0.8
+THRESHOLD=0.85
 
 # 履歴CSV
 HISTORY_CSV_FILE="history.csv"
