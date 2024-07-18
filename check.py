@@ -98,7 +98,7 @@ def main():
     # 使用例
     directory_path = './all/'  # 画像ファイルが含まれるディレクトリのパス
     file_name=sys.argv[1]
-    new_image_path = './input/' + file_name  # 新しい画像ファイルのパス
+    new_image_path = file_name  # 新しい画像ファイルのパス
 
     # 新しい画像の読み込みと特徴量抽出
     new_image = Image.open(new_image_path)
