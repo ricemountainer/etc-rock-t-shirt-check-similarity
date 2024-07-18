@@ -2,3 +2,5 @@ all/
 work/
 history.csv
 *.jpg
+copy2gdrive.bat
+.env

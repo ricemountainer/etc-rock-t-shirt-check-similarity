@@ -6,6 +6,7 @@ import torch
 import sys
 import csv
 import shutil
+from dotenv import load_dotenv
 # 特徴量抽出のための変換
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -18,7 +19,7 @@ model = models.resnet50(pretrained=True)
 model = model.eval()
 
 # 類似性の閾値
-THRESHOLD=0.85
+#THRESHOLD=0.85
 
 # 履歴CSV
 HISTORY_CSV_FILE="history.csv"
@@ -36,7 +37,7 @@ def cosine_similarity(features1, features2):
     return np.dot(features1, features2) / (np.linalg.norm(features1) * np.linalg.norm(features2))
 
 # 新しい画像の特徴量と過去の画像の特徴量を比較する関数
-def check_similarity(new_image_features, existing_images_features, threshold=THRESHOLD):
+def check_similarity(new_image_features, existing_images_features, threshold):
     similar_images = []
     for file_path, features in existing_images_features.items():
         similarity = cosine_similarity(new_image_features, features)
@@ -61,8 +62,8 @@ def remove_prefix_suffix(input_str):
         input_str = input_str[len("./all/"):]
     
     # 末尾の".jpg"を取り除く
-    if input_str.endswith(".jpg"):
-        input_str = input_str[:-len(".jpg")]
+    #if input_str.endswith(".jpg"):
+    #    input_str = input_str[:-len(".jpg")]
     
     return input_str
 
@@ -95,7 +96,8 @@ def print_check_result(similar_images):
         print("類似した画像は見つかりませんでした。")
 
 def main():
-    # 使用例
+    load_dotenv()    
+    similarity_threshold=float(os.getenv("SIMILARITY_THRESHOLD"))
     directory_path = './all/'  # 画像ファイルが含まれるディレクトリのパス
     file_name=sys.argv[1]
     new_image_path = file_name  # 新しい画像ファイルのパス
@@ -116,7 +118,7 @@ def main():
             existing_images_features[image_file] = features
 
     # 類似性の判定
-    similar_images = check_similarity(new_image_features, existing_images_features)
+    similar_images = check_similarity(new_image_features, existing_images_features , similarity_threshold)
     print_check_result(similar_images)
 
     # ファイル移動
